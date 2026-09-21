@@ -1,0 +1,168 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class LoginTest {
+
+    private static final String FIRST_NAME = "Kyle";
+    private static final String LAST_NAME = "Lamola";
+
+    private static final String VALID_USERNAME = "kyl_1";
+    private static final String INVALID_USERNAME = "kyle!!!!!!!";
+
+    private static final String VALID_PASSWORD = "Ch&&sec@ke99!";
+    private static final String INVALID_PASSWORD = "password";
+
+    private static final String VALID_PHONE = "+27839869976";
+    private static final String INVALID_PHONE = "08966553";
+
+    private Login validLogin;
+
+    @Before
+    public void setUp() {
+        validLogin = new Login(
+                FIRST_NAME,
+                LAST_NAME,
+                VALID_USERNAME,
+                VALID_PASSWORD,
+                VALID_PHONE
+        );
+    }
+
+    @Test
+    public void correctlyFormattedUsernameReturnsTrue() {
+        assertTrue(validLogin.checkUserName());
+    }
+
+    @Test
+    public void incorrectlyFormattedUsernameReturnsFalse() {
+        Login login = new Login(
+                FIRST_NAME,
+                LAST_NAME,
+                INVALID_USERNAME,
+                VALID_PASSWORD,
+                VALID_PHONE
+        );
+
+        assertFalse(login.checkUserName());
+    }
+
+    @Test
+    public void passwordMeetingComplexityReturnsTrue() {
+        assertTrue(validLogin.checkPasswordComplexity());
+    }
+
+    @Test
+    public void passwordFailingComplexityReturnsFalse() {
+        Login login = new Login(
+                FIRST_NAME,
+                LAST_NAME,
+                VALID_USERNAME,
+                INVALID_PASSWORD,
+                VALID_PHONE
+        );
+
+        assertFalse(login.checkPasswordComplexity());
+    }
+
+    @Test
+    public void correctlyFormattedCellPhoneReturnsTrue() {
+        assertTrue(validLogin.checkCellPhoneNumber());
+    }
+
+    @Test
+    public void incorrectlyFormattedCellPhoneReturnsFalse() {
+        Login login = new Login(
+                FIRST_NAME,
+                LAST_NAME,
+                VALID_USERNAME,
+                VALID_PASSWORD,
+                INVALID_PHONE
+        );
+
+        assertFalse(login.checkCellPhoneNumber());
+    }
+
+    @Test
+    public void validRegistrationReturnsSuccessMessage() {
+        assertEquals(
+                Login.REGISTRATION_SUCCESS,
+                validLogin.registerUser()
+        );
+    }
+
+    @Test
+    public void invalidRegistrationReturnsUsernameMessage() {
+        Login login = new Login(
+                FIRST_NAME,
+                LAST_NAME,
+                INVALID_USERNAME,
+                VALID_PASSWORD,
+                VALID_PHONE
+        );
+
+        assertEquals(
+                Login.USERNAME_ERROR,
+                login.registerUser()
+        );
+    }
+
+    @Test
+    public void successfulLoginReturnsTrue() {
+        assertTrue(
+                validLogin.loginUser(
+                        VALID_USERNAME,
+                        VALID_PASSWORD
+                )
+        );
+    }
+
+    @Test
+    public void incorrectUsernameMakesLoginFail() {
+        assertFalse(
+                validLogin.loginUser(
+                        "kyle_1",
+                        VALID_PASSWORD
+                )
+        );
+    }
+
+    @Test
+    public void incorrectPasswordMakesLoginFail() {
+        assertFalse(
+                validLogin.loginUser(
+                        VALID_USERNAME,
+                        INVALID_PASSWORD
+                )
+        );
+    }
+
+    @Test
+    public void successfulLoginReturnsWelcomeMessage() {
+        validLogin.loginUser(
+                VALID_USERNAME,
+                VALID_PASSWORD
+        );
+
+        assertEquals(
+                "Welcome Kyle, Lamola it is great to see you again.",
+                validLogin.returnLoginStatus()
+        );
+    }
+
+    @Test
+    public void failedLoginReturnsFailureMessage() {
+        validLogin.loginUser(
+                VALID_USERNAME,
+                INVALID_PASSWORD
+        );
+
+        assertEquals(
+                Login.LOGIN_FAILURE,
+                validLogin.returnLoginStatus()
+        );
+    }
+}
