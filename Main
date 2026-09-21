@@ -1,0 +1,60 @@
+import java.util.Scanner;
+
+/**
+ * Console application for registration and login.
+ */
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("=== Registration ===");
+
+        System.out.print("First name: ");
+        String firstName = scanner.nextLine();
+
+        System.out.print("Last name: ");
+        String lastName = scanner.nextLine();
+
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        System.out.print("Cell phone number: ");
+        String cellPhoneNumber = scanner.nextLine();
+
+        Login login = new Login(
+                firstName,
+                lastName,
+                username,
+                password,
+                cellPhoneNumber
+        );
+
+        String registrationMessage = login.registerUser();
+
+        System.out.println(registrationMessage);
+
+        if (!Login.REGISTRATION_SUCCESS.equals(registrationMessage)) {
+            scanner.close();
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=== Login ===");
+
+        System.out.print("Username: ");
+        String enteredUsername = scanner.nextLine();
+
+        System.out.print("Password: ");
+        String enteredPassword = scanner.nextLine();
+
+        login.loginUser(enteredUsername, enteredPassword);
+
+        System.out.println(login.returnLoginStatus());
+
+        scanner.close();
+    }
+}
